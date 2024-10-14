@@ -1,95 +1,107 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+'use client';
+
+import { Input } from '@/components';
+import { Button, Typography } from '@mui/material'
+import { useEffect, useState } from 'react';
+import { isFinite } from 'lodash';
+import { toast } from 'react-toastify'
+import { FibonacciNumbers, Mode, ModeEnum } from './type';
+import { MODE } from './constants';
+import { StyledInputContainer, StyledMainContainer, StyledOutputContainer } from './styles';
 
 export default function Home() {
-  return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>src/app/page.tsx</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [mode, setMode] = useState<Mode>(MODE.initial)
+  const [input, setInput] = useState<string | undefined>(undefined)
+  const [intervalTime, setIntervalTime] = useState<number | undefined>(undefined);
+  const [fibonacciNumbers, setFibonacciNumbers] = useState<FibonacciNumbers>({})
+  const [logs, setLogs] = useState<string[]>([]);
 
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+  const [tick, setTick] = useState(0);
+
+  const onInputChange = (value: string) => setInput(value)
+  const onInputClear = () => setInput('')
+
+  const onSetLogs = (input: string) => {
+    const newLogs: string[] = [...logs, input as string];
+    setLogs(newLogs)
+  }
+
+  const onSubmit = () => {
+    if (!input) toast.error('Please provide an input')
+
+    switch (mode.type) {
+      case ModeEnum.INITIAL:
+        const initialValue = Number(input)
+        if (isFinite(initialValue)) {
+          setIntervalTime(initialValue)
+          onInputClear()
+          onSetLogs(input as string)
+          setMode(MODE.inProgress)
+        }
+        else toast.error('Value must be numeric')
+        break;
+      case ModeEnum.IN_PROGRESS:
+        const inProgressValue = Number(input)
+        if (isFinite(inProgressValue)) {
+          const newFibonacciNumbers = fibonacciNumbers;
+
+          if (newFibonacciNumbers[inProgressValue]) {
+            newFibonacciNumbers[inProgressValue] += 1
+            setFibonacciNumbers(newFibonacciNumbers)
+          } else {
+            const newFibonacciNumbers = { ...fibonacciNumbers, [inProgressValue]: 1 }
+            setFibonacciNumbers(newFibonacciNumbers)
+          }
+
+          // setMode(MODE.inProgress)
+          onInputClear()
+          onSetLogs(input as string)
+        }
+        else toast.error('Value must be numeric')
+        break;
+      default:
+        break;
+    }
+  }
+
+  useEffect(() => {
+    if (intervalTime) {
+      const intervalId = setInterval(() => {
+        const totalFibonacciEntries = Object.entries(fibonacciNumbers)
+        const fibonacciString = totalFibonacciEntries
+          .reduce((previous, [key, value], index) => {
+            const isLastIndex = totalFibonacciEntries.length - 1 === index
+            return `${previous}${key}:${value}${isLastIndex ? '' : ', '}`
+          }, '')
+
+        onSetLogs(fibonacciString)
+        setTick((e) => e + 1)
+      }, (intervalTime * 1000))
+
+      return () => {
+        clearInterval(intervalId)
+      }
+    }
+  }, [intervalTime, fibonacciNumbers, tick])
+
+
+  return (
+    <StyledMainContainer>
+      <StyledInputContainer>
+        <Input
+          {...mode}
+          value={input}
+          onChange={onInputChange}
+          onSubmit={onSubmit}
+        />
+        <Button onClick={onSubmit} variant='contained'>Submit</Button>
+        <Button onClick={onSubmit} variant='contained'>Reset</Button>
+      </StyledInputContainer>
+      <StyledOutputContainer>
+        {logs.map((log) =>
+          <Typography>{log}</Typography>
+        )}
+      </StyledOutputContainer>
+    </StyledMainContainer>
   );
 }
