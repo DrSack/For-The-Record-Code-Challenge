@@ -10,5 +10,10 @@ export const MODE: InputMode = {
     placeholder: 'First Number',
     label: 'Please enter the first number',
     type: ModeEnum.IN_PROGRESS
-  }
+  },
+  inProgress2: {
+    placeholder: 'Next Number',
+    label: 'Please enter the next number',
+    type: ModeEnum.IN_PROGRESS2
+  },
 }

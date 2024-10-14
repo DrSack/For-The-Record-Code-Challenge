@@ -1,65 +1,93 @@
 'use client';
 
 import { Input } from '@/components';
-import { Button, Typography } from '@mui/material'
-import { useEffect, useState } from 'react';
+import { Box, Button, Typography } from '@mui/material'
+import { useEffect, useRef, useState } from 'react';
 import { isFinite } from 'lodash';
 import { toast } from 'react-toastify'
 import { FibonacciNumbers, Mode, ModeEnum } from './type';
 import { MODE } from './constants';
 import { StyledInputContainer, StyledMainContainer, StyledOutputContainer } from './styles';
+import { getFibonacciSequence } from '@/helpers';
+
+const FIRST_1000_FIBONACCI_NUMBERS = getFibonacciSequence(1000)
 
 export default function Home() {
+  const ref = useRef<any>();
+
+  // add hooks in next iteration. Refactor. Add tests then deploy.
+
   const [mode, setMode] = useState<Mode>(MODE.initial)
   const [input, setInput] = useState<string | undefined>(undefined)
   const [intervalTime, setIntervalTime] = useState<number | undefined>(undefined);
   const [fibonacciNumbers, setFibonacciNumbers] = useState<FibonacciNumbers>({})
   const [logs, setLogs] = useState<string[]>([]);
-
   const [tick, setTick] = useState(0);
+  const [halt, setHalt] = useState(false);
 
   const onInputChange = (value: string) => setInput(value)
   const onInputClear = () => setInput('')
+
+  const onHalt = () => {
+    onSetLogs('timer halted')
+    setHalt(true)
+  }
+
+  const onResume = () => {
+    onSetLogs('timer resumed')
+    setHalt(false)
+  }
+
+  const onFIB = (input: string) => {
+    const newLogs: string[] = [...logs, input as string, 'FIB'];
+    setLogs(newLogs)
+  }
 
   const onSetLogs = (input: string) => {
     const newLogs: string[] = [...logs, input as string];
     setLogs(newLogs)
   }
 
+  const onInitial = (value: number) => {
+    setIntervalTime(value)
+    onSetLogs(`${mode.label} >> ${value}`)
+    setMode(MODE.inProgress)
+    onInputClear()
+  }
+
+  const onInProgress = (value: number, isFirstProgress?: boolean) => {
+    const newFibonacciNumbers = fibonacciNumbers;
+    if (newFibonacciNumbers[value]) {
+      newFibonacciNumbers[value] += 1
+      setFibonacciNumbers(newFibonacciNumbers)
+    } else {
+      const newFibonacciNumbers = { ...fibonacciNumbers, [value]: 1 }
+      setFibonacciNumbers(newFibonacciNumbers)
+    }
+
+    if (FIRST_1000_FIBONACCI_NUMBERS.includes(value)) {
+      onFIB(`${mode.label} >> ${value}`)
+    } else {
+      onSetLogs(`${mode.label} >> ${value}`)
+    } onInputClear()
+
+    if (isFirstProgress) setMode(MODE.inProgress2)
+  }
+
   const onSubmit = () => {
     if (!input) toast.error('Please provide an input')
+    const value = Number(input)
+    if (!isFinite(value)) toast.error('Value must be numeric')
 
     switch (mode.type) {
       case ModeEnum.INITIAL:
-        const initialValue = Number(input)
-        if (isFinite(initialValue)) {
-          setIntervalTime(initialValue)
-          onInputClear()
-          onSetLogs(input as string)
-          setMode(MODE.inProgress)
-        }
-        else toast.error('Value must be numeric')
+        onInitial(value)
         break;
       case ModeEnum.IN_PROGRESS:
-        const inProgressValue = Number(input)
-        if (isFinite(inProgressValue)) {
-          const newFibonacciNumbers = fibonacciNumbers;
-
-          if (newFibonacciNumbers[inProgressValue]) {
-            newFibonacciNumbers[inProgressValue] += 1
-            setFibonacciNumbers(newFibonacciNumbers)
-          } else {
-            const newFibonacciNumbers = { ...fibonacciNumbers, [inProgressValue]: 1 }
-            setFibonacciNumbers(newFibonacciNumbers)
-          }
-
-          // setMode(MODE.inProgress)
-          onInputClear()
-          onSetLogs(input as string)
-        }
-        else toast.error('Value must be numeric')
+        onInProgress(value)
         break;
       default:
+        onInProgress(value)
         break;
     }
   }
@@ -69,6 +97,7 @@ export default function Home() {
       const intervalId = setInterval(() => {
         const totalFibonacciEntries = Object.entries(fibonacciNumbers)
         const fibonacciString = totalFibonacciEntries
+          .sort((a, b) => Number(a[0]) - Number(b[0]))
           .reduce((previous, [key, value], index) => {
             const isLastIndex = totalFibonacciEntries.length - 1 === index
             return `${previous}${key}:${value}${isLastIndex ? '' : ', '}`
@@ -78,12 +107,14 @@ export default function Home() {
         setTick((e) => e + 1)
       }, (intervalTime * 1000))
 
-      return () => {
-        clearInterval(intervalId)
-      }
+      if (halt) clearInterval(intervalId);
+      return () => clearInterval(intervalId)
     }
-  }, [intervalTime, fibonacciNumbers, tick])
+  }, [intervalTime, logs, fibonacciNumbers, tick, halt])
 
+  useEffect(() => {
+    ref?.current?.scrollIntoView?.();
+  }, [logs])
 
   return (
     <StyledMainContainer>
@@ -94,12 +125,16 @@ export default function Home() {
           onChange={onInputChange}
           onSubmit={onSubmit}
         />
-        <Button onClick={onSubmit} variant='contained'>Submit</Button>
-        <Button onClick={onSubmit} variant='contained'>Reset</Button>
+        <Box sx={{ display: 'flex', flexDirection: 'row', gap: 1, padding: 1 }}>
+          <Button onClick={onSubmit} variant='contained'>Submit</Button>
+          <Button color='success' onClick={onHalt} variant='contained'>Halt</Button>
+          <Button color='warning' onClick={onResume} variant='contained'>Resume</Button>
+          <Button color='error' onClick={() => { }} variant='contained'>Quit</Button>
+        </Box>
       </StyledInputContainer>
       <StyledOutputContainer>
-        {logs.map((log) =>
-          <Typography>{log}</Typography>
+        {logs.map((log, index) =>
+          <Typography ref={index === logs.length - 1 ? ref : undefined}>{log}</Typography>
         )}
       </StyledOutputContainer>
     </StyledMainContainer>
