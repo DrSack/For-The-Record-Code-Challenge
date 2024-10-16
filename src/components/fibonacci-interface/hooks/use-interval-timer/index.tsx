@@ -1,4 +1,4 @@
-import { FibonacciNumbers, Mode } from "@/components/fibonacci-interface/types";
+import { FibonacciNumbers } from "@/components/fibonacci-interface/types";
 import { getFibonacciSequenceString } from "@/helpers";
 import { useEffect, useState } from "react"
 

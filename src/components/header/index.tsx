@@ -1,4 +1,4 @@
-import { AppBar, Typography } from "@mui/material"
+import { AppBar } from "@mui/material"
 import { StyledToolbar, StyledTypography } from "./style"
 
 export const Header = () => {
