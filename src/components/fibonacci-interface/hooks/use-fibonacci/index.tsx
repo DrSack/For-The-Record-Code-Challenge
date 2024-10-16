@@ -1,13 +1,14 @@
-import { MODE } from "@/app/constants";
-import { FibonacciNumbers, Mode, ModeEnum } from "@/app/type";
+import { getFibonacciSequenceString } from "@/helpers";
 import { useState } from "react"
 import { toast } from "react-toastify";
+import { MODE } from "../../constants";
+import { FibonacciNumbers, Mode, ModeEnum } from "../../type";
 
 interface UseFibonacciProps {
-    fibonacciNumbersCompare: number[];
+  fibonacciNumbersToCompare: number[];
 }
 
-export const UseFibonacci = ({ fibonacciNumbersCompare }: UseFibonacciProps) => {
+export const UseFibonacci = ({ fibonacciNumbersToCompare }: UseFibonacciProps) => {
   const [logs, setLogs] = useState<string[]>([]);
   const [mode, setMode] = useState<Mode>(MODE.initial)
   const [input, setInput] = useState<string | undefined>(undefined)
@@ -15,26 +16,35 @@ export const UseFibonacci = ({ fibonacciNumbersCompare }: UseFibonacciProps) => 
   const [intervalTime, setIntervalTime] = useState<number | undefined>(undefined);
 
   const onInputChange = (value: string) => setInput(value)
-  const onInputClear = () => setInput('')
 
-  const onFIB = (input: string) => {
+  const onFIBLog = (input: string) => {
     const newLogs: string[] = [...logs, input as string, 'FIB'];
     setLogs(newLogs)
   }
 
-  const onSetLogs = (input: string) => {
+  const onSetLog = (input: string) => {
     const newLogs: string[] = [...logs, input as string];
+    setLogs(newLogs)
+  }
+
+  const onQuitLog = () => {
+    const fibonacciString = getFibonacciSequenceString(fibonacciNumbers)
+    const newLogs: string[] = [
+      ...logs,
+      `${mode.label} >> quit`,
+      fibonacciString
+    ];
     setLogs(newLogs)
   }
 
   const onInitial = (value: number) => {
     setIntervalTime(value)
-    onSetLogs(`${mode.label} >> ${value}`)
+    onSetLog(`${mode.label} >> ${value}`)
     setMode(MODE.inProgress)
-    onInputClear()
+    onInputChange('')
   }
 
-  const onInProgress = (value: number, isFirstProgress?: boolean) => {
+  const onInProgress = (value: number) => {
     const newFibonacciNumbers = fibonacciNumbers;
     if (newFibonacciNumbers[value]) {
       newFibonacciNumbers[value] += 1
@@ -44,19 +54,27 @@ export const UseFibonacci = ({ fibonacciNumbersCompare }: UseFibonacciProps) => 
       setFibonacciNumbers(newFibonacciNumbers)
     }
 
-    if (fibonacciNumbersCompare.includes(value)) {
-      onFIB(`${mode.label} >> ${value}`)
+    if (fibonacciNumbersToCompare.includes(value)) {
+      onFIBLog(`${mode.label} >> ${value}`)
     } else {
-      onSetLogs(`${mode.label} >> ${value}`)
-    } onInputClear()
+      onSetLog(`${mode.label} >> ${value}`)
+    } onInputChange('')
 
-    if (isFirstProgress) setMode(MODE.inProgress2)
+    const isNextNumber = Object.values(fibonacciNumbers).length > 0 && mode.type === ModeEnum.IN_PROGRESS
+    if (isNextNumber) setMode(MODE.inProgress2)
   }
 
   const onSubmit = () => {
-    if (!input) toast.error('Please provide an input')
+    if (!input) {
+      toast.error('Please provide an input')
+      return;
+    }
+
     const value = Number(input)
-    if (!isFinite(value)) toast.error('Value must be numeric')
+    if (!isFinite(value)) {
+      toast.error('Value must be numeric')
+      return;
+    }
 
     switch (mode.type) {
       case ModeEnum.INITIAL:
@@ -71,5 +89,15 @@ export const UseFibonacci = ({ fibonacciNumbersCompare }: UseFibonacciProps) => 
     }
   }
 
-  return { mode, logs, input, fibonacciNumbers, intervalTime, onSubmit, onInputChange, onSetLogs }
+  return {
+    mode,
+    logs,
+    input,
+    intervalTime,
+    fibonacciNumbers,
+    onSubmit,
+    onSetLog,
+    onQuitLog,
+    onInputChange,
+  }
 }

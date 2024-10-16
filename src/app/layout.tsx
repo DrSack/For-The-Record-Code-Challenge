@@ -1,4 +1,4 @@
-import { Header, MainContainer } from "@/components";
+import { Header, LayoutWrapper } from "@/components";
 import { Box } from "@mui/material";
 import type { Metadata } from "next";
 
@@ -17,7 +17,7 @@ export default function RootLayout({
       <body>
         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
           <Header />
-          <MainContainer>{children}</MainContainer>
+          <LayoutWrapper>{children}</LayoutWrapper>
         </Box>
       </body>
     </html>

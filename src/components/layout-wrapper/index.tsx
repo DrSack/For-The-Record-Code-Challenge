@@ -5,18 +5,18 @@ import { PropsWithChildren } from "react"
 import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
-const StyledMainContainer = styled(Box)(({ theme }) => ({
+const StyledLayoutWrapper = styled(Box)(({ theme }) => ({
   height: '90vh',
   paddingLeft:  theme.spacing(8),
   paddingRight:  theme.spacing(8),
   marginTop: theme.spacing(10)
 }));
 
-export const MainContainer = ({ children }: PropsWithChildren<{}>) => {
+export const LayoutWrapper = ({ children }: PropsWithChildren<{}>) => {
   return (
     <>
       <ToastContainer />
-      <StyledMainContainer>{children}</StyledMainContainer>
+      <StyledLayoutWrapper>{children}</StyledLayoutWrapper>
     </>
   )
 }

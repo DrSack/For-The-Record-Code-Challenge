@@ -20,7 +20,9 @@ export const Input = ({ value, placeholder, label, onChange, onSubmit }: InputPr
       onKeyPress={(e) => {
         if (e.key === 'Enter') onSubmit()
       }}
+      slotProps={{ inputLabel: { shrink: true } }}
       fullWidth
+      autoFocus
     />
   )
 }
