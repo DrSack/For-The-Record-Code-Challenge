@@ -1,3 +1,4 @@
+import { getFibonacciSequence } from "@/helpers";
 import { InputMode, ModeEnum } from "./type";
 
 export const MODE: InputMode = {
@@ -17,3 +18,6 @@ export const MODE: InputMode = {
     type: ModeEnum.IN_PROGRESS2
   },
 }
+
+export const FIRST_1000_FIBONACCI_NUMBERS = getFibonacciSequence(1000)
+
