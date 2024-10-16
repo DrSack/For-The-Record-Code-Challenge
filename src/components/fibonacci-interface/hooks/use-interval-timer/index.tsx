@@ -1,4 +1,4 @@
-import { FibonacciNumbers, Mode } from "@/components/fibonacci-interface/type";
+import { FibonacciNumbers, Mode } from "@/components/fibonacci-interface/types";
 import { getFibonacciSequenceString } from "@/helpers";
 import { useEffect, useState } from "react"
 
@@ -35,7 +35,6 @@ export const useIntervalTimer = ({ logs, intervalTime, fibonacciNumbers, onSetLo
         onSetLog(fibonacciString)
         setTick((e) => e + 1)
     }
-
 
     useEffect(() => {
         if (intervalTime) {

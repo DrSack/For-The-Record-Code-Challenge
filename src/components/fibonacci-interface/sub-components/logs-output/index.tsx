@@ -14,7 +14,7 @@ export const LogsOutput = ({ logs }: LogsOutputProps) => {
   }, [logs])
 
   return (
-    <StyledOutputContainer>
+    <StyledOutputContainer data-testid='fibonacci-interface-output-container'>
       {logs.map((log, index) =>
         <Typography
           key={`log-message-${index}`}

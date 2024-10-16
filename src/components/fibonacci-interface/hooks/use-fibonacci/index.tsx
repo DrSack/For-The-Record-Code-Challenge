@@ -2,7 +2,7 @@ import { getFibonacciSequenceString } from "@/helpers";
 import { useState } from "react"
 import { toast } from "react-toastify";
 import { MODE } from "../../constants";
-import { FibonacciNumbers, Mode, ModeEnum } from "../../type";
+import { FibonacciNumbers, Mode, ModeEnum } from "../../types";
 
 interface UseFibonacciProps {
   fibonacciNumbersToCompare: number[];
@@ -10,20 +10,20 @@ interface UseFibonacciProps {
 
 export const UseFibonacci = ({ fibonacciNumbersToCompare }: UseFibonacciProps) => {
   const [logs, setLogs] = useState<string[]>([]);
+  const [input, setInput] = useState<string>('')
   const [mode, setMode] = useState<Mode>(MODE.initial)
-  const [input, setInput] = useState<string | undefined>(undefined)
   const [fibonacciNumbers, setFibonacciNumbers] = useState<FibonacciNumbers>({})
   const [intervalTime, setIntervalTime] = useState<number | undefined>(undefined);
 
   const onInputChange = (value: string) => setInput(value)
 
   const onFIBLog = (input: string) => {
-    const newLogs: string[] = [...logs, input as string, 'FIB'];
+    const newLogs: string[] = [...logs, input, 'FIB'];
     setLogs(newLogs)
   }
 
   const onSetLog = (input: string) => {
-    const newLogs: string[] = [...logs, input as string];
+    const newLogs: string[] = [...logs, input];
     setLogs(newLogs)
   }
 
@@ -31,7 +31,7 @@ export const UseFibonacci = ({ fibonacciNumbersToCompare }: UseFibonacciProps) =
     const fibonacciString = getFibonacciSequenceString(fibonacciNumbers)
     const newLogs: string[] = [
       ...logs,
-      `${mode.label} >> quit`,
+      'quit',
       fibonacciString
     ];
     setLogs(newLogs)
@@ -45,6 +45,7 @@ export const UseFibonacci = ({ fibonacciNumbersToCompare }: UseFibonacciProps) =
   }
 
   const onInProgress = (value: number) => {
+    // Determine to append existing number in state or create a new key and add 1
     const newFibonacciNumbers = fibonacciNumbers;
     if (newFibonacciNumbers[value]) {
       newFibonacciNumbers[value] += 1
@@ -53,14 +54,15 @@ export const UseFibonacci = ({ fibonacciNumbersToCompare }: UseFibonacciProps) =
       const newFibonacciNumbers = { ...fibonacciNumbers, [value]: 1 }
       setFibonacciNumbers(newFibonacciNumbers)
     }
-
+    // Check if value is part of the fibonacci sequence
     if (fibonacciNumbersToCompare.includes(value)) {
       onFIBLog(`${mode.label} >> ${value}`)
     } else {
       onSetLog(`${mode.label} >> ${value}`)
     } onInputChange('')
 
-    const isNextNumber = Object.values(fibonacciNumbers).length > 0 && mode.type === ModeEnum.IN_PROGRESS
+    // Change label if still in IN_PROGRESS mode
+    const isNextNumber = mode.type === ModeEnum.IN_PROGRESS
     if (isNextNumber) setMode(MODE.inProgress2)
   }
 
@@ -79,9 +81,6 @@ export const UseFibonacci = ({ fibonacciNumbersToCompare }: UseFibonacciProps) =
     switch (mode.type) {
       case ModeEnum.INITIAL:
         onInitial(value)
-        break;
-      case ModeEnum.IN_PROGRESS:
-        onInProgress(value)
         break;
       default:
         onInProgress(value)

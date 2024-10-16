@@ -1,16 +1,14 @@
-import { AppBar, Toolbar, Typography } from "@mui/material"
+import { AppBar, Typography } from "@mui/material"
+import { StyledToolbar, StyledTypography } from "./style"
 
 export const Header = () => {
   return (
-    <AppBar>
-      <Toolbar sx={{
-        backgroundColor: 'white',
-        color: 'black'
-      }}>
-        <Typography component="div" sx={{ fontSize: 20 }}>
+    <AppBar data-testid='main-header'>
+      <StyledToolbar>
+        <StyledTypography>
           FTR Code Assessment
-        </Typography>
-      </Toolbar>
+        </StyledTypography>
+      </StyledToolbar>
     </AppBar>
   )
 }

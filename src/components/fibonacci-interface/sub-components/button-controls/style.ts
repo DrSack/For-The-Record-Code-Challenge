@@ -2,7 +2,7 @@
 
 import { Box, styled } from "@mui/material";
 
-export const StyledInputContainer = styled(Box)(() => ({
+export const StyledButtonControlsContainer = styled(Box)(() => ({
   display: 'flex',
   flexDirection: 'row',
   gap: 1,

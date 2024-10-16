@@ -11,6 +11,7 @@ interface InputProps {
 export const Input = ({ value, placeholder, label, onChange, onSubmit }: InputProps) => {
   return (
     <TextField
+      data-testid='fibonacci-interface-textfield'
       placeholder={placeholder}
       label={label}
       value={value}

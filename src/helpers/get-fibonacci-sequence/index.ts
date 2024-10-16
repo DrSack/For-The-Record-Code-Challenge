@@ -1,4 +1,4 @@
-import { FibonacciNumbers } from "@/components/fibonacci-interface/type"
+import { FibonacciNumbers } from "@/components/fibonacci-interface/types"
 
 export const getFibonacciSequenceString = (fibonacciNumbers: FibonacciNumbers) => {
   const totalFibonacciEntries = Object.entries(fibonacciNumbers)

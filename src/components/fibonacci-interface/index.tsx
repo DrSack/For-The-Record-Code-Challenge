@@ -36,7 +36,7 @@ export const FibonacciInterface = ({ fibonacciNumbersToCompare }: FibonacciInter
 
   return (
     <>
-      <StyledFibonacciInterfaceContainer>
+      <StyledFibonacciInterfaceContainer data-testid='main-fibonacci-interface-container'>
         <StyledInputContainer>
           <Input
             {...mode}

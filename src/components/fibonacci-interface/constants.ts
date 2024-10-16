@@ -1,4 +1,4 @@
-import { InputMode, ModeEnum } from "./type";
+import { InputMode, ModeEnum } from "./types";
 
 export const MODE: InputMode = {
   initial: {

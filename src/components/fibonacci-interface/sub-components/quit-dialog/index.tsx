@@ -18,6 +18,7 @@ export const QuitDialog = ({ quit }: QuitDialogProps) => {
     <Dialog
       open={quit}
       onClose={handleClose}
+      data-testid='fibonacci-interface-quit-dialog'
     >
       <DialogTitle>
         Terminate App
