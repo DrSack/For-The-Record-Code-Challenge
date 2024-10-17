@@ -23,7 +23,7 @@ const onInputAndSubmit = ({
   act(() => result.current.onSubmit())
 }
 
-describe('Test useFibonacci Component', () => {
+describe('Test useFibonacci hook', () => {
   it('Test onSetLog', async () => {
     const {
       result
