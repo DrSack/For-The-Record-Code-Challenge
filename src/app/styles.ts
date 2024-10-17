@@ -7,3 +7,9 @@ export const StyledBox = styled(Box)(() => ({
   width: '100%',
   display: 'flex',
 }));
+
+export const StyledLayoutBox = styled(Box)(() => ({
+  display: 'flex',
+  flexDirection: 'column',
+}));
+

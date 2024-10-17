@@ -1,6 +1,6 @@
 import { Header, LayoutWrapper } from "@/components";
-import { Box } from "@mui/material";
 import type { Metadata } from "next";
+import { StyledLayoutBox } from "./styles";
 
 export const metadata: Metadata = {
   title: "FTR Code Assessment",
@@ -15,10 +15,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+        <StyledLayoutBox>
           <Header />
           <LayoutWrapper>{children}</LayoutWrapper>
-        </Box>
+        </StyledLayoutBox>
       </body>
     </html>
   );
