@@ -5,9 +5,11 @@ import { FibonacciInterface } from './index'
 
 
 const testBase = ({ getByTestId }: Pick<RenderResult, 'getByTestId'>) => {
-  const input = getByTestId('fibonacci-interface-textfield')
-  expect(input).toHaveTextContent('Please input the number of time in seconds between emitting numbers and their frequency')
-  expect(input).toContainHTML('Number of Seconds')
+  const inputOuter = getByTestId('fibonacci-interface-textfield')
+  const inputInner = inputOuter.querySelector('input')
+
+  expect(inputOuter).toHaveTextContent('Please input the number of time in seconds between emitting numbers and their frequency')
+  expect(inputInner).toHaveAttribute('placeholder', 'Number of Seconds')
 
   const buttonControls = getByTestId('fibonacci-interface-button-container')
 

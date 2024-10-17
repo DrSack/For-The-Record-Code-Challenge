@@ -4,7 +4,7 @@ import { StyledFibonacciInterfaceContainer, StyledInputContainer } from './style
 import { LogsOutput } from './sub-components/logs-output';
 import { Input } from './sub-components/input';
 import { ButtonControls } from './sub-components';
-import { UseFibonacci, useIntervalTimer } from './hooks';
+import { useFibonacci, useIntervalTimer } from './hooks';
 import { QuitDialog } from './sub-components/quit-dialog';
 
 interface FibonacciInterfaceProps {
@@ -22,7 +22,7 @@ export const FibonacciInterface = ({ fibonacciNumbersToCompare }: FibonacciInter
     onSetLog,
     onQuitLog,
     onInputChange,
-  } = UseFibonacci({
+  } = useFibonacci({
     fibonacciNumbersToCompare
   })
 

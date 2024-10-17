@@ -8,7 +8,7 @@ interface UseFibonacciProps {
   fibonacciNumbersToCompare: number[];
 }
 
-export const UseFibonacci = ({ fibonacciNumbersToCompare }: UseFibonacciProps) => {
+export const useFibonacci = ({ fibonacciNumbersToCompare }: UseFibonacciProps) => {
   const [logs, setLogs] = useState<string[]>([]);
   const [input, setInput] = useState<string>('')
   const [mode, setMode] = useState<Mode>(MODE.initial)
@@ -67,24 +67,23 @@ export const UseFibonacci = ({ fibonacciNumbersToCompare }: UseFibonacciProps) =
   }
 
   const onSubmit = () => {
-    if (!input) {
-      toast.error('Please provide an input')
-      return;
-    }
+    try {
+      if (!input) throw new Error("Please provide an input");
+        
+      const value = Number(input)
+      if (!isFinite(value)) throw new Error("Value must be numeric")
 
-    const value = Number(input)
-    if (!isFinite(value)) {
-      toast.error('Value must be numeric')
-      return;
-    }
-
-    switch (mode.type) {
-      case ModeEnum.INITIAL:
-        onInitial(value)
-        break;
-      default:
-        onInProgress(value)
-        break;
+      switch (mode.type) {
+        case ModeEnum.INITIAL:
+          onInitial(value)
+          break;
+        default:
+          onInProgress(value)
+          break;
+      }
+    } catch (error: unknown) {
+      if (error instanceof Error) toast.error(error.message as string)
+      else console.error(error)
     }
   }
 

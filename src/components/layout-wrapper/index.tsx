@@ -8,7 +8,7 @@ export const LayoutWrapper = ({ children }: PropsWithChildren) => {
   return (
     <>
       <ToastContainer />
-      <StyledLayoutWrapper>{children}</StyledLayoutWrapper>
+      <StyledLayoutWrapper data-testid='layout-wrapper'>{children}</StyledLayoutWrapper>
     </>
   )
 }

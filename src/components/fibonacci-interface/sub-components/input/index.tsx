@@ -18,9 +18,7 @@ export const Input = ({ value, placeholder, label, onChange, onSubmit }: InputPr
       variant='filled'
       autoComplete='off'
       onChange={(event) => onChange(event.target.value)}
-      onKeyPress={(e) => {
-        if (e.key === 'Enter') onSubmit()
-      }}
+      onKeyPress={(e) => e.key === 'Enter' && onSubmit()}
       slotProps={{ inputLabel: { shrink: true } }}
       fullWidth
       autoFocus

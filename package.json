@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "jest ./src"
+    "test": "jest --coverage ./src"
   },
   "dependencies": {
     "@emotion/react": "^11.13.3",
