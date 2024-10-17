@@ -13,7 +13,7 @@ export const useFibonacci = ({ fibonacciNumbersToCompare }: UseFibonacciProps) =
   const [input, setInput] = useState<string>('')
   const [mode, setMode] = useState<Mode>(MODE.initial)
   const [fibonacciNumbers, setFibonacciNumbers] = useState<FibonacciNumbers>({})
-  const [intervalTime, setIntervalTime] = useState<number | undefined>(undefined);
+  const [intervalInput, setintervalInput] = useState<number | undefined>(undefined);
 
   const onInputChange = (value: string) => setInput(value)
 
@@ -38,7 +38,7 @@ export const useFibonacci = ({ fibonacciNumbersToCompare }: UseFibonacciProps) =
   }
 
   const onInitial = (value: number) => {
-    setIntervalTime(value)
+    setintervalInput(value)
     onSetLog(`${mode.label} >> ${value}`)
     setMode(MODE.inProgress)
     onInputChange('')
@@ -66,13 +66,19 @@ export const useFibonacci = ({ fibonacciNumbersToCompare }: UseFibonacciProps) =
     if (isNextNumber) setMode(MODE.inProgress2)
   }
 
+  const onValidateInput = (input: string) => {
+    if (!input) throw new Error("Please provide an input");
+
+    const value = Number(input)
+    if (!isFinite(value)) throw new Error("Value must be numeric")
+    if (value <= 0 && mode.type === ModeEnum.INITIAL) throw new Error("Value must be more than 0")
+
+    return value;
+  }
+
   const onSubmit = () => {
     try {
-      if (!input) throw new Error("Please provide an input");
-        
-      const value = Number(input)
-      if (!isFinite(value)) throw new Error("Value must be numeric")
-
+      const value = onValidateInput(input);
       switch (mode.type) {
         case ModeEnum.INITIAL:
           onInitial(value)
@@ -91,7 +97,7 @@ export const useFibonacci = ({ fibonacciNumbersToCompare }: UseFibonacciProps) =
     mode,
     logs,
     input,
-    intervalTime,
+    intervalInput,
     fibonacciNumbers,
     onSubmit,
     onSetLog,

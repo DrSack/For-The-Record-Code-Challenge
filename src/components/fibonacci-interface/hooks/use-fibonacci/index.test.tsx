@@ -70,11 +70,11 @@ describe('Test useFibonacci Component', () => {
     testMode(result.current.mode, MODE.initial)
     expect(result.current.logs.length).toBe(0)
     expect(result.current.input).toBe('');
-    expect(result.current.intervalTime).toBe(undefined)
+    expect(result.current.intervalInput).toBe(undefined)
     expect(result.current.fibonacciNumbers).toEqual({})
 
     onInputAndSubmit({ value: '2', result })
-    expect(result.current.intervalTime).toBe(2)
+    expect(result.current.intervalInput).toBe(2)
     testMode(result.current.mode, MODE.inProgress)
     expect(result.current.logs).toEqual([
       'Please input the number of time in seconds between emitting numbers and their frequency >> 2'
@@ -134,6 +134,18 @@ describe('Test useFibonacci Component', () => {
       }))
 
       onInputAndSubmit({ value: '123-test', result })
+      expect(result.current.logs.length).toBe(0)
+    })
+
+    test('Test string with 0 and below', () => {
+      const {
+        result
+      } = renderHook(() => useFibonacci({
+        fibonacciNumbersToCompare: getFibonacciSequence(10)
+      }))
+
+      onInputAndSubmit({ value: '0', result })
+      onInputAndSubmit({ value: '-5', result })
       expect(result.current.logs.length).toBe(0)
     })
   })

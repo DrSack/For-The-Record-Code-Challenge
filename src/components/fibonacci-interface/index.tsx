@@ -16,7 +16,7 @@ export const FibonacciInterface = ({ fibonacciNumbersToCompare }: FibonacciInter
     mode,
     logs,
     input,
-    intervalTime,
+    intervalInput,
     fibonacciNumbers,
     onSubmit,
     onSetLog,
@@ -28,7 +28,7 @@ export const FibonacciInterface = ({ fibonacciNumbersToCompare }: FibonacciInter
 
   const { quit, onHalt, onResume, onQuit } = useIntervalTimer({
     logs,
-    intervalTime,
+    intervalInput,
     fibonacciNumbers,
     onSetLog,
     onQuitLog,

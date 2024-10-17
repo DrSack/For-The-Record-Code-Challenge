@@ -2,7 +2,7 @@ import '@testing-library/jest-dom'
 import { act, renderHook } from '@testing-library/react'
 import { useIntervalTimer } from './index'
 
-describe('Test useIntervalTimer Component', () => {
+describe('Test useintervalInputr Component', () => {
   it('Test with {1: 2, 3: 1} fibonacci props, halt, resume, and quit', async () => {
     const onQuitLog = jest.fn();
     const onSetLog = jest.fn()
@@ -10,7 +10,7 @@ describe('Test useIntervalTimer Component', () => {
     const {
       result
     } = renderHook(() => useIntervalTimer({
-      intervalTime: 1,
+      intervalInput: 1,
       fibonacciNumbers: { 1: 2, 3: 1 },
       logs: [
         'Please input the number of time in seconds between emitting numbers and their frequency >> 1',

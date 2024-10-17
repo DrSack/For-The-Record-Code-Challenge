@@ -1,13 +1,13 @@
 import { Typography } from "@mui/material"
 import { useEffect, useRef } from "react"
-import { StyledOutputContainer } from "./style"
+import { StyledEmptyLog, StyledOutputContainer } from "./style"
 
 interface LogsOutputProps {
   logs: string[]
 }
 
 export const LogsOutput = ({ logs }: LogsOutputProps) => {
-  const ref = useRef<HTMLSpanElement | null>(null);
+  const ref = useRef<HTMLSpanElement | HTMLDivElement | null>(null);
 
   useEffect(() => {
     ref?.current?.scrollIntoView?.();
@@ -16,11 +16,16 @@ export const LogsOutput = ({ logs }: LogsOutputProps) => {
   return (
     <StyledOutputContainer data-testid='fibonacci-interface-output-container'>
       {logs.map((log, index) =>
-        <Typography
-          key={`log-message-${index}`}
-          ref={index === logs.length - 1 ? ref : undefined}>
-          {log}
-        </Typography>
+        log ?
+          <Typography
+            key={`log-message-${index}`}
+            ref={index === logs.length - 1 ? ref : undefined}>
+            {log}
+          </Typography>
+          : <StyledEmptyLog
+            key={`empty-log-${index}`}
+            ref={index === logs.length - 1 ? ref : undefined}
+          />
       )}
     </StyledOutputContainer>
   )
